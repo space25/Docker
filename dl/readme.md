@@ -8,5 +8,9 @@
     ```
 1. Download playlist
     ```
-    youtube-dl -o "%(playlist_index)s-%(title)s.%(ext)s" <playlist_link>
+    youtube-dl --yes-playlist <url>
+    ```
+    or
+    ```
+    youtube-dl -cio '%(autonumber)s-%(title)s.%(ext)s' <url>
     ```
