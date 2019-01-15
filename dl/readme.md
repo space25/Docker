@@ -23,7 +23,7 @@
 ## Download from Coursera
 1. coursera-dl -u <user> -p <pass> modelthinking-004
 
-## After cownload:
+## After download:
 ```
 chmod -R 777 .
 ```
