@@ -24,6 +24,8 @@ RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
 # This is how you will activate this conda environment
 ENV CONDA_ACTIVATE "source ${CONDA_ENV_PATH}/activate ${CONDA_ENV}"
 
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+
 # Install APT packages
 RUN $CONDA_ACTIVATE &&  apt-get update -y && apt-get install -y --no-install-recommends \
     apt-utils \
@@ -70,8 +72,9 @@ RUN $CONDA_ACTIVATE &&  apt-get update -y && apt-get install -y --no-install-rec
     doxygen \
     clang \
     qtdeclarative5-dev \
-    g++-multilib \
-    gcc-multilib \
+    gcc-8 \
+    g++-8 \
+    ccache \
     texlive-latex-base \
     texlive-latex-extra \
     texlive-fonts-recommended \
@@ -82,8 +85,8 @@ RUN $CONDA_ACTIVATE &&  apt-get update -y && apt-get install -y --no-install-rec
     nvidia-current \
     htop \
     tmux \
-    xvfb \
-    && \
+    xvfb && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /cv && cd /cv &&\
@@ -123,7 +126,7 @@ RUN $CONDA_ACTIVATE && conda info --envs && \
     pandas scipy sklearn scikit-learn scikit-image csvkit cloudpickle pickleshare numexpr \
     CFFI tqdm lxml editdistance cairocffi pyqt5 qimage2ndarray dotmap pandas json5 pydotplus \
     scikit_learn Augmentor opencv-python torch torchvision shapely[vectorized] pyclipper \
-    albumentations imagesize numba python-levenshtein jamo && \
+    albumentations imagesize numba python-levenshtein jamo Deprecated && \
     python -m ipykernel.kernelspec
 
 # Install pip packages
@@ -132,7 +135,6 @@ RUN $CONDA_ACTIVATE && pip --no-cache-dir install --upgrade tensorflow-gpu==1.12
 RUN echo "$CONDA_ACTIVATE" >> $HOME/.bashrc && \
     # Run fake X server. It needs for using QT
     echo "pgrep -x Xvfb > /dev/null || Xvfb :0 & export DISPLAY=:0 " >> $HOME/.bashrc && \
-    echo "ln -sf /data ~/srk_str" >> $HOME/.bashrc && \
     echo "set -g mouse on" >> $HOME/.tmux.conf && \
     echo "set-option -g history-limit 100000" >> $HOME/.tmux.conf
 
