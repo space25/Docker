@@ -1,6 +1,14 @@
-FROM tensorflow/tensorflow:1.12.0-devel-gpu-py3
+FROM tensorflow/tensorflow:1.13.1-gpu-py3
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONIOENCODING=UTF-8
+ENV PYTHONNOUSERSITE="True"
+ENV CONDA_ENV_PATH /root/miniconda3/bin
+ENV GPU_CONDA_ENV "gpu_env_py37"
+ENV CPU_CONDA_ENV "cpu_env_py37"
+ENV PYTHON_VERSION 3.7
+ENV OPEN_CV_VERSION 4.1.0
+ENV TENSORFLOW_VERSION 1.13.1
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh
@@ -13,21 +21,19 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends wget bzip2 &
     rm -f ./Miniconda3-latest-Linux-x86_64.sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV PYTHONNOUSERSITE="True"
-ENV CONDA_ENV_PATH /root/miniconda3/bin
-ENV CONDA_ENV "python36"
-
 # Create virtualenv
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
-    ${CONDA_ENV_PATH}/conda create -n $CONDA_ENV python=3.6
+    ${CONDA_ENV_PATH}/conda create -n $GPU_CONDA_ENV python=${PYTHON_VERSION} && \
+    ${CONDA_ENV_PATH}/conda create -n $CPU_CONDA_ENV python=${PYTHON_VERSION}
 
 # This is how you will activate this conda environment
-ENV CONDA_ACTIVATE "source ${CONDA_ENV_PATH}/activate ${CONDA_ENV}"
+ENV CONDA_ACTIVATE_GPU "source ${CONDA_ENV_PATH}/activate ${GPU_CONDA_ENV}"
+ENV CONDA_ACTIVATE_CPU "source ${CONDA_ENV_PATH}/activate ${CPU_CONDA_ENV}"
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 
 # Install APT packages
-RUN $CONDA_ACTIVATE &&  apt-get update -y && apt-get install -y --no-install-recommends \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
     apt-utils \
     software-properties-common \
     protobuf-compiler \
@@ -89,9 +95,10 @@ RUN $CONDA_ACTIVATE &&  apt-get update -y && apt-get install -y --no-install-rec
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Build OpenCV
 RUN mkdir /cv && cd /cv &&\
-    git clone --depth 1 https://github.com/opencv/opencv_contrib.git -b 4.0.1 &&\
-    git clone --depth 1 https://github.com/opencv/opencv.git -b 4.0.1 &&\
+    git clone --depth 1 https://github.com/opencv/opencv_contrib.git -b ${OPEN_CV_VERSION} &&\
+    git clone --depth 1 https://github.com/opencv/opencv.git -b ${OPEN_CV_VERSION} &&\
     cd opencv &&\
     mkdir build &&\
     cd build &&\
@@ -120,7 +127,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.10.2/cmake-3.10.2
     rm -rf cmake-3.10.2
 
 # Install python packages
-RUN $CONDA_ACTIVATE && conda info --envs && \
+RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install setuptools Pillow h5py hdf5storage ipykernel jupyter matplotlib numpy \
     pandas scipy sklearn scikit-learn scikit-image csvkit cloudpickle pickleshare numexpr \
@@ -129,10 +136,20 @@ RUN $CONDA_ACTIVATE && conda info --envs && \
     albumentations imagesize numba python-levenshtein jamo Deprecated && \
     python -m ipykernel.kernelspec
 
-# Install pip packages
-RUN $CONDA_ACTIVATE && pip --no-cache-dir install --upgrade tensorflow-gpu==1.12.0
+RUN $CONDA_ACTIVATE_CPU && conda info --envs && \
+    pip install --upgrade pip && \
+    pip --no-cache-dir install setuptools Pillow h5py hdf5storage ipykernel jupyter matplotlib numpy \
+    pandas scipy sklearn scikit-learn scikit-image csvkit cloudpickle pickleshare numexpr \
+    CFFI tqdm lxml editdistance cairocffi pyqt5 qimage2ndarray dotmap pandas json5 pydotplus \
+    scikit_learn Augmentor opencv-python torch torchvision shapely[vectorized] pyclipper \
+    albumentations imagesize numba python-levenshtein jamo Deprecated && \
+    python -m ipykernel.kernelspec
 
-RUN echo "$CONDA_ACTIVATE" >> $HOME/.bashrc && \
+# Install tensorflow pip package
+RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install --upgrade tensorflow-gpu==${TENSORFLOW_VERSION}
+RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install --upgrade tensorflow==${TENSORFLOW_VERSION}
+
+RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
     # Run fake X server. It needs for using QT
     echo "pgrep -x Xvfb > /dev/null || Xvfb :0 & export DISPLAY=:0 " >> $HOME/.bashrc && \
     echo "set -g mouse on" >> $HOME/.tmux.conf && \
