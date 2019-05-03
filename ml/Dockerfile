@@ -1,14 +1,15 @@
-FROM tensorflow/tensorflow:1.13.1-gpu-py3
+FROM tensorflow/tensorflow:1.12.0-gpu-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONIOENCODING=UTF-8
 ENV PYTHONNOUSERSITE="True"
 ENV CONDA_ENV_PATH /root/miniconda3/bin
-ENV GPU_CONDA_ENV "gpu_env_py37"
-ENV CPU_CONDA_ENV "cpu_env_py37"
-ENV PYTHON_VERSION 3.7
+ENV GPU_CONDA_ENV "gpu_env_py36"
+ENV CPU_CONDA_ENV "cpu_env_py36"
+ENV PYTHON_VERSION 3.6
 ENV OPEN_CV_VERSION 4.1.0
-ENV TENSORFLOW_VERSION 1.13.1
+ENV TENSORFLOW_VERSION 1.12.2
+ENV CMAKE_VERSION 3.14.3
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh
@@ -95,6 +96,16 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Build cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz &&\
+    tar -xzvf cmake-${CMAKE_VERSION}.tar.gz &&\
+    cd cmake-${CMAKE_VERSION} &&\
+    ./bootstrap &&\
+    make &&\
+    make install &&\
+    cd .. &&\
+    rm -rf cmake-${CMAKE_VERSION}
+
 # Build OpenCV
 RUN mkdir /cv && cd /cv &&\
     git clone --depth 1 https://github.com/opencv/opencv_contrib.git -b ${OPEN_CV_VERSION} &&\
@@ -117,37 +128,22 @@ RUN mkdir /cv && cd /cv &&\
     -D BUILD_TIFF=ON .. &&\
     ninja && ninja install && ldconfig && rm -rf /cv
 
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.10.2/cmake-3.10.2.tar.gz &&\
-    tar -xzvf cmake-3.10.2.tar.gz &&\
-    cd cmake-3.10.2 &&\
-    ./bootstrap &&\
-    make &&\
-    make install &&\
-    cd .. &&\
-    rm -rf cmake-3.10.2
+COPY requirements.txt /
 
 # Install python packages
 RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     pip install --upgrade pip && \
-    pip --no-cache-dir install setuptools Pillow h5py hdf5storage ipykernel jupyter matplotlib numpy \
-    pandas scipy sklearn scikit-learn scikit-image csvkit cloudpickle pickleshare numexpr \
-    CFFI tqdm lxml editdistance cairocffi pyqt5 qimage2ndarray dotmap pandas json5 pydotplus \
-    scikit_learn Augmentor opencv-python torch torchvision shapely[vectorized] pyclipper \
-    albumentations imagesize numba python-levenshtein jamo Deprecated && \
+    pip --no-cache-dir install -r /requirements.txt  && \
     python -m ipykernel.kernelspec
 
 RUN $CONDA_ACTIVATE_CPU && conda info --envs && \
     pip install --upgrade pip && \
-    pip --no-cache-dir install setuptools Pillow h5py hdf5storage ipykernel jupyter matplotlib numpy \
-    pandas scipy sklearn scikit-learn scikit-image csvkit cloudpickle pickleshare numexpr \
-    CFFI tqdm lxml editdistance cairocffi pyqt5 qimage2ndarray dotmap pandas json5 pydotplus \
-    scikit_learn Augmentor opencv-python torch torchvision shapely[vectorized] pyclipper \
-    albumentations imagesize numba python-levenshtein jamo Deprecated && \
+    pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec
 
 # Install tensorflow pip package
-RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install --upgrade tensorflow-gpu==${TENSORFLOW_VERSION}
-RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install --upgrade tensorflow==${TENSORFLOW_VERSION}
+RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION}
+RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION}
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
     # Run fake X server. It needs for using QT
