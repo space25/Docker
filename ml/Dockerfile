@@ -81,6 +81,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     qtdeclarative5-dev \
     gcc-8 \
     g++-8 \
+    tesseract-ocr-all \
     ccache \
     texlive-latex-base \
     texlive-latex-extra \
@@ -95,16 +96,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     xvfb && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Build cmake
-RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz &&\
-    tar -xzvf cmake-${CMAKE_VERSION}.tar.gz &&\
-    cd cmake-${CMAKE_VERSION} &&\
-    ./bootstrap &&\
-    make &&\
-    make install &&\
-    cd .. &&\
-    rm -rf cmake-${CMAKE_VERSION}
 
 # Build OpenCV
 RUN mkdir /cv && cd /cv &&\
@@ -127,6 +118,16 @@ RUN mkdir /cv && cd /cv &&\
     -D WITH_TIFF=ON\
     -D BUILD_TIFF=ON .. &&\
     ninja && ninja install && ldconfig && rm -rf /cv
+
+# Build cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz &&\
+    tar -xzvf cmake-${CMAKE_VERSION}.tar.gz &&\
+    cd cmake-${CMAKE_VERSION} &&\
+    ./bootstrap &&\
+    make &&\
+    make install &&\
+    cd .. &&\
+    rm -rf cmake-${CMAKE_VERSION}
 
 COPY requirements.txt /
 
