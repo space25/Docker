@@ -1,8 +1,20 @@
 FROM ubuntu
 
+# Change sh to bash
+RUN ln -sf /bin/bash /bin/sh
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV PYTHONIOENCODING=UTF-8
+
 RUN apt-get update -y &&\
     apt-get upgrade -y &&\
     apt-get autoremove &&\
-    apt-get install -y python3 python3-dev python3-pip ffmpeg
+    apt-get install -y python3 python3-dev python3-pip ffmpeg locales
 
-RUN pip3 install --upgrade youtube_dl coursera-dl
+# Set the locale
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8  
+
+RUN pip3 --no-cache-dir install --upgrade youtube_dl coursera-dl
