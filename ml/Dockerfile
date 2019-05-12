@@ -11,22 +11,23 @@ ENV OPEN_CV_VERSION 4.1.0
 ENV TENSORFLOW_VERSION 1.12.2
 ENV CMAKE_VERSION 3.14.3
 
-# Change sh to bash
-RUN ln -sf /bin/bash /bin/sh
-
-# Install miniconda3
-RUN apt-get update -y && apt-get install -y --no-install-recommends wget bzip2 locales && \
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    chmod +x Miniconda3-latest-Linux-x86_64.sh && \
-    ./Miniconda3-latest-Linux-x86_64.sh -b && \
-    rm -f ./Miniconda3-latest-Linux-x86_64.sh && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get install -y --no-install-recommends wget bzip2 locales
 
 # Set the locale
 RUN locale-gen en_US.UTF-8  
 ENV LANG en_US.UTF-8  
 ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8 
+ENV LC_ALL en_US.UTF-8
+
+# Change sh to bash
+RUN ln -sf /bin/bash /bin/sh
+
+# Install miniconda3
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod +x Miniconda3-latest-Linux-x86_64.sh && \
+    ./Miniconda3-latest-Linux-x86_64.sh -b && \
+    rm -f ./Miniconda3-latest-Linux-x86_64.sh && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create virtualenv
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
