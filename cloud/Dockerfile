@@ -8,10 +8,8 @@ RUN apt-get update -y && \
     ffmpeg libmagickcore-6.q16-3-extra smbclient supervisor libreoffice \
     libbz2-dev libc-client-dev libgmp3-dev libkrb5-dev
 
-# RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+COPY 000-default.conf /etc/apache2/sites-available
 
-ENV NEXTCLOUD_ADMIN_USER=auser
-ENV NEXTCLOUD_ADMIN_PASSWORD=123456qazwsx
+RUN mkdir /etc/apache2/ssl && a2enmod rewrite headers env dir mime setenvif ssl
+
 ENV NEXTCLOUD_UPDATE=1
-
-CMD ["/usr/bin/supervisord"]
