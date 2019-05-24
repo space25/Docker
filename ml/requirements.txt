@@ -40,3 +40,4 @@ python-levenshtein
 jamo
 jamotools
 Deprecated
+bezier
