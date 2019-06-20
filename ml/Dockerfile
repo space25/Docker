@@ -1,14 +1,15 @@
-FROM tensorflow/tensorflow:1.12.0-gpu-py3
+FROM tensorflow/tensorflow:1.13.1-gpu-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONIOENCODING=UTF-8
 ENV PYTHONNOUSERSITE="True"
 ENV CONDA_ENV_PATH /root/miniconda3/bin
-ENV GPU_CONDA_ENV "gpu_env_py36"
-ENV CPU_CONDA_ENV "cpu_env_py36"
-ENV PYTHON_VERSION 3.6
+ENV GPU_CONDA_ENV "gpu_env_py37"
+ENV CPU_CONDA_ENV "cpu_env_py37"
+ENV BETA1_CONDA_ENV "beta1_env_py37"
+ENV PYTHON_VERSION 3.7
 ENV OPEN_CV_VERSION 4.1.0
-ENV TENSORFLOW_VERSION 1.12.2
+ENV TENSORFLOW_VERSION 1.13.1
 ENV CMAKE_VERSION 3.14.3
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends wget bzip2 locales
@@ -32,11 +33,13 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 # Create virtualenv
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
     ${CONDA_ENV_PATH}/conda create -n $GPU_CONDA_ENV python=${PYTHON_VERSION} && \
-    ${CONDA_ENV_PATH}/conda create -n $CPU_CONDA_ENV python=${PYTHON_VERSION}
+    ${CONDA_ENV_PATH}/conda create -n $CPU_CONDA_ENV python=${PYTHON_VERSION} && \
+    ${CONDA_ENV_PATH}/conda create -n $BETA1_CONDA_ENV python=${PYTHON_VERSION}
 
 # This is how you will activate this conda environment
 ENV CONDA_ACTIVATE_GPU "source ${CONDA_ENV_PATH}/activate ${GPU_CONDA_ENV}"
 ENV CONDA_ACTIVATE_CPU "source ${CONDA_ENV_PATH}/activate ${CPU_CONDA_ENV}"
+ENV CONDA_ACTIVATE_BETA1 "source ${CONDA_ENV_PATH}/activate ${BETA1_CONDA_ENV}"
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 
@@ -149,9 +152,15 @@ RUN $CONDA_ACTIVATE_CPU && conda info --envs && \
     pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec
 
+RUN CONDA_ACTIVATE_BETA1 && conda info --envs && \
+    pip install --upgrade pip && \
+    pip --no-cache-dir install -r /requirements.txt && \
+    python -m ipykernel.kernelspec
+
 # Install tensorflow pip package
 RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION}
 RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION}
+RUN $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow==2.0.0-beta1
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
     # Run fake X server. It needs for using QT

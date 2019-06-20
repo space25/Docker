@@ -41,3 +41,4 @@ jamo
 jamotools
 Deprecated
 bezier
+imutils
