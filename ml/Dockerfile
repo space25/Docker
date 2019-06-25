@@ -152,7 +152,7 @@ RUN $CONDA_ACTIVATE_CPU && conda info --envs && \
     pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec
 
-RUN CONDA_ACTIVATE_BETA1 && conda info --envs && \
+RUN $CONDA_ACTIVATE_BETA1 && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec
