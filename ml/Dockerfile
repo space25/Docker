@@ -84,7 +84,7 @@ RUN mkdir /cv && cd /cv &&\
     -D BUILD_TIFF=ON .. &&\
     ninja && ninja install && ldconfig && rm -rf /cv
 
-COPY requirements.txt /
+ADD requirements.txt /
 
 # Install python packages
 RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
