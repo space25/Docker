@@ -29,8 +29,6 @@ pydotplus
 scikit_learn
 Augmentor
 opencv-python
-torch
-torchvision
 shapely[vectorized]
 pyclipper
 albumentations
