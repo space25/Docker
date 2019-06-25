@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:1.13.1-gpu-py3
+FROM tensorflow/tensorflow:1.14.0-gpu-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONIOENCODING=UTF-8
@@ -9,7 +9,7 @@ ENV CPU_CONDA_ENV "cpu_env_py37"
 ENV BETA1_CONDA_ENV "beta1_env_py37"
 ENV PYTHON_VERSION 3.7
 ENV OPEN_CV_VERSION 4.1.0
-ENV TENSORFLOW_VERSION 1.13.1
+ENV TENSORFLOW_VERSION 1.14.0
 ENV CMAKE_VERSION 3.14.3
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends wget bzip2 locales
