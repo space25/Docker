@@ -44,67 +44,22 @@ ENV CONDA_ACTIVATE_BETA1 "source ${CONDA_ENV_PATH}/activate ${BETA1_CONDA_ENV}"
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 
 # Install APT packages
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    apt-utils \
-    software-properties-common \
-    protobuf-compiler \
-    pkg-config \
-    curl \
-    build-essential \
-    ninja-build \
-    rsync \
-    unzip \
-    cmake \
-    git \
-    gfortran \
-    nano \
-    vim \
-    libboost-all-dev \
-    libopenimageio-dev \
-    libfreetype6-dev \
-    libpng12-dev \
-    libzmq3-dev \
-    libjpeg-dev \
-    libtiff-dev \
-    libjasper-dev \
-    libpng-dev \
-    libavcodec-dev \
-    libavformat-dev \
-    libswscale-dev \
-    libv4l-dev \
-    libgtk2.0-dev \
-    libatlas-base-dev \
-    libtbb2 \
-    libtbb-dev \
-    libdc1394-22-dev \
-    libxvidcore-dev \
-    libx264-dev \
-    libgtk-3-dev \
-    libffi6 \
-    libffi-dev \
-    libopencv-dev \
-    swig \
-    graphviz \
-    libgtest-dev \
-    doxygen \
-    clang \
-    qtdeclarative5-dev \
-    gcc-8 \
-    g++-8 \
-    tesseract-ocr-all \
-    ccache \
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-fonts-recommended \
-    libboost-all-dev \
-    netcdf-bin \
-    libnetcdf-dev \
-    libtool-bin automake \
-    nvidia-current \
-    htop \
-    tmux \
-    xvfb && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 --slave /usr/bin/g++ g++ /usr/bin/g++-8 && \
+RUN apt-get update -y && apt-get install -y \
+    pkg-config apt-utils zip g++ zlib1g-dev unzip \
+    openjdk-8-jdk \
+    python3-dev python3-pip python3-numpy \
+    python-dev python-numpy \
+    build-essential cmake ninja-build git \
+    libjpeg-dev libtiff-dev  libpng-dev libavcodec-dev \
+    libavformat-dev libswscale-dev libv4l-dev \
+    libgtk2.0-dev libatlas-base-dev gfortran \
+    libtbb2 libtbb-dev \
+    libdc1394-22-dev libxvidcore-dev libx264-dev \
+    libgtk-3-dev libboost-all-dev swig graphviz libgtest-dev \
+    doxygen clang clang-format qtdeclarative5-dev g++-multilib \
+    gcc-multilib texlive-latex-base \
+    texlive-fonts-recommended libboost-all-dev netcdf-bin \
+    libnetcdf-dev libtool-bin automake ccache qtcreator && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Build OpenCV
@@ -129,16 +84,6 @@ RUN mkdir /cv && cd /cv &&\
     -D BUILD_TIFF=ON .. &&\
     ninja && ninja install && ldconfig && rm -rf /cv
 
-# Build cmake
-RUN wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.tar.gz &&\
-    tar -xzvf cmake-${CMAKE_VERSION}.tar.gz &&\
-    cd cmake-${CMAKE_VERSION} &&\
-    ./bootstrap &&\
-    make &&\
-    make install &&\
-    cd .. &&\
-    rm -rf cmake-${CMAKE_VERSION}
-
 COPY requirements.txt /
 
 # Install python packages
@@ -160,7 +105,7 @@ RUN $CONDA_ACTIVATE_BETA1 && conda info --envs && \
 # Install tensorflow pip package
 RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION}
 RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION}
-RUN $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow==2.0.0-beta1
+RUN $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow-gpu==2.0.0-beta1
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
     # Run fake X server. It needs for using QT
