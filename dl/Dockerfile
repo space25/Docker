@@ -6,11 +6,11 @@ RUN ln -sf /bin/bash /bin/sh
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONIOENCODING=UTF-8
 
-RUN apt-get update -y &&\
-    apt-get upgrade -y &&\
-    apt-get autoremove &&\
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get autoremove && \
     apt-get install -y python3 python3-dev python3-pip \
-                        ffmpeg locales transmission-cli
+                        ffmpeg locales transmission-cli rtorrent
 
 # Set the locale
 RUN locale-gen en_US.UTF-8  
