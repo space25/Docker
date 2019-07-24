@@ -17,5 +17,5 @@
         -v custom_apps:/var/www/html/custom_apps \
         -v config:/var/www/html/config \
         -v data:/var/www/html/data \
-        cloud
+        spacev/cloud
     ```
