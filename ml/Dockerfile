@@ -107,10 +107,6 @@ RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFL
 RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION}
 RUN $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow-gpu==2.0.0-beta1
 
-RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
-    # Run fake X server. It needs for using QT
-    echo "pgrep -x Xvfb > /dev/null || Xvfb :0 & export DISPLAY=:0 " >> $HOME/.bashrc && \
-    echo "set -g mouse on" >> $HOME/.tmux.conf && \
-    echo "set-option -g history-limit 100000" >> $HOME/.tmux.conf
+RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
 WORKDIR "/"
