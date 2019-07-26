@@ -41,25 +41,25 @@ ENV CONDA_ACTIVATE_GPU "source ${CONDA_ENV_PATH}/activate ${GPU_CONDA_ENV}"
 ENV CONDA_ACTIVATE_CPU "source ${CONDA_ENV_PATH}/activate ${CPU_CONDA_ENV}"
 ENV CONDA_ACTIVATE_BETA1 "source ${CONDA_ENV_PATH}/activate ${BETA1_CONDA_ENV}"
 
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-
 # Install APT packages
 RUN apt-get update -y && apt-get install -y \
     pkg-config apt-utils zip g++ zlib1g-dev unzip \
-    openjdk-8-jdk \
+    openjdk-8-jdk automake  gfortran \
+    build-essential cmake ninja-build git clang clang-format \
+    protobuf-compiler pkg-config \
     python3-dev python3-pip python3-numpy \
     python-dev python-numpy \
-    build-essential cmake ninja-build git \
-    libjpeg-dev libtiff-dev  libpng-dev libavcodec-dev \
+    ccache qtcreator qtdeclarative5-dev libboost-all-dev \
+    libjpeg-dev libtiff-dev libpng-dev libavcodec-dev \
     libavformat-dev libswscale-dev libv4l-dev \
-    libgtk2.0-dev libatlas-base-dev gfortran \
-    libtbb2 libtbb-dev \
+    libgtk2.0-dev libatlas-base-dev libtbb2 libtbb-dev \
     libdc1394-22-dev libxvidcore-dev libx264-dev \
-    libgtk-3-dev libboost-all-dev swig graphviz libgtest-dev \
-    doxygen clang clang-format qtdeclarative5-dev g++-multilib \
+    libgtk-3-dev swig graphviz libgtest-dev \
+    doxygen texlive-latex-base texlive-latex-extra texlive-fonts-recommended \
+    g++-multilib netcdf-bin libnetcdf-dev \
     gcc-multilib texlive-latex-base \
-    texlive-fonts-recommended libboost-all-dev netcdf-bin \
-    libnetcdf-dev libtool-bin automake ccache qtcreator && \
+    texlive-fonts-recommended netcdf-bin \
+    libnetcdf-dev libtool-bin tmux xvfb htop rsync && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Build OpenCV
