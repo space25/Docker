@@ -1,7 +1,5 @@
 FROM tensorflow/tensorflow:1.14.0-gpu-py3
 
-ENV PYTHONIOENCODING=UTF-8
-
 ENV PYTHON_VERSION 3.7
 ENV OPEN_CV_VERSION 4.1.0
 ENV TENSORFLOW_VERSION 1.14.0
@@ -30,6 +28,7 @@ RUN ln -sf /bin/bash /bin/sh && \
 ENV LANG en_US.UTF-8  
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
+ENV PYTHONIOENCODING=UTF-8
 
 # Install APT packages
 RUN apt-get install -y --no-install-recommends \
