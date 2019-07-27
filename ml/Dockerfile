@@ -1,48 +1,38 @@
 FROM tensorflow/tensorflow:1.14.0-gpu-py3
 
-ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONIOENCODING=UTF-8
-ENV PYTHONNOUSERSITE="True"
-ENV CONDA_ENV_PATH /root/miniconda3/bin
-ENV GPU_CONDA_ENV "gpu_env_py37"
-ENV CPU_CONDA_ENV "cpu_env_py37"
-ENV BETA1_CONDA_ENV "beta1_env_py37"
+
 ENV PYTHON_VERSION 3.7
 ENV OPEN_CV_VERSION 4.1.0
 ENV TENSORFLOW_VERSION 1.14.0
 ENV CMAKE_VERSION 3.14.3
 
-RUN apt-get update -y && apt-get install -y --no-install-recommends wget bzip2 locales
-
-# Set the locale
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8
-
-# Change sh to bash
-RUN ln -sf /bin/bash /bin/sh
-
-# Install miniconda3
-RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    chmod +x Miniconda3-latest-Linux-x86_64.sh && \
-    ./Miniconda3-latest-Linux-x86_64.sh -b && \
-    rm -f ./Miniconda3-latest-Linux-x86_64.sh && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Create virtualenv
-RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
-    ${CONDA_ENV_PATH}/conda create -n $GPU_CONDA_ENV python=${PYTHON_VERSION} && \
-    ${CONDA_ENV_PATH}/conda create -n $CPU_CONDA_ENV python=${PYTHON_VERSION} && \
-    ${CONDA_ENV_PATH}/conda create -n $BETA1_CONDA_ENV python=${PYTHON_VERSION}
+ENV DEBIAN_FRONTEND noninteractive
+ENV PYTHONNOUSERSITE="True"
+ENV CONDA_ENV_PATH /root/miniconda3/bin
+ENV GPU_CONDA_ENV "gpu_env_py37"
+ENV CPU_CONDA_ENV "cpu_env_py37"
+ENV BETA1_CONDA_ENV "beta1_env_py37"
 
 # This is how you will activate this conda environment
 ENV CONDA_ACTIVATE_GPU "source ${CONDA_ENV_PATH}/activate ${GPU_CONDA_ENV}"
 ENV CONDA_ACTIVATE_CPU "source ${CONDA_ENV_PATH}/activate ${CPU_CONDA_ENV}"
 ENV CONDA_ACTIVATE_BETA1 "source ${CONDA_ENV_PATH}/activate ${BETA1_CONDA_ENV}"
 
+# Change sh to bash
+RUN ln -sf /bin/bash /bin/sh && \
+    apt-get update -y && apt-get install -y --no-install-recommends \
+    locales && \
+    apt-get clean && \
+# Set the locale
+    locale-gen en_US.UTF-8
+    
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8
+
 # Install APT packages
-RUN apt-get update -y && apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
     pkg-config apt-utils zip g++ zlib1g-dev unzip \
     openjdk-8-jdk automake  gfortran \
     build-essential cmake ninja-build git clang clang-format \
@@ -59,8 +49,21 @@ RUN apt-get update -y && apt-get install -y \
     g++-multilib netcdf-bin libnetcdf-dev \
     gcc-multilib texlive-latex-base \
     texlive-fonts-recommended netcdf-bin \
-    libnetcdf-dev libtool-bin tmux xvfb htop rsync && \
+    libnetcdf-dev libtool-bin tmux xvfb htop rsync wget bzip2 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install miniconda3
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod +x Miniconda3-latest-Linux-x86_64.sh && \
+    ./Miniconda3-latest-Linux-x86_64.sh -b && \
+    rm -f ./Miniconda3-latest-Linux-x86_64.sh && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Create virtualenv
+RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
+    ${CONDA_ENV_PATH}/conda create -n $GPU_CONDA_ENV python=${PYTHON_VERSION} && \
+    ${CONDA_ENV_PATH}/conda create -n $CPU_CONDA_ENV python=${PYTHON_VERSION} && \
+    ${CONDA_ENV_PATH}/conda create -n $BETA1_CONDA_ENV python=${PYTHON_VERSION}
 
 # Build OpenCV
 RUN mkdir /cv && cd /cv &&\
@@ -87,25 +90,25 @@ RUN mkdir /cv && cd /cv &&\
 ADD requirements.txt /
 
 # Install python packages
+# GPU
 RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt  && \
-    python -m ipykernel.kernelspec
-
-RUN $CONDA_ACTIVATE_CPU && conda info --envs && \
+    python -m ipykernel.kernelspec && \
+# CPU   
+    $CONDA_ACTIVATE_CPU && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt && \
-    python -m ipykernel.kernelspec
-
-RUN $CONDA_ACTIVATE_BETA1 && conda info --envs && \
+    python -m ipykernel.kernelspec && \
+# GPU nightly
+    $CONDA_ACTIVATE_BETA1 && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt && \
-    python -m ipykernel.kernelspec
-
+    python -m ipykernel.kernelspec && \
 # Install tensorflow pip package
-RUN $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION}
-RUN $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION}
-RUN $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow-gpu==2.0.0-beta1
+    $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION} && \
+    $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION} && \
+    $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow-gpu==2.0.0-beta1
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
