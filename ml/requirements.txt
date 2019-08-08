@@ -40,3 +40,5 @@ jamotools
 Deprecated
 bezier
 imutils
+keras
+pydot
