@@ -46,7 +46,7 @@ RUN apt-get install -y --no-install-recommends \
     libgtk-3-dev swig graphviz libgtest-dev \
     doxygen texlive-latex-base texlive-latex-extra texlive-fonts-recommended \
     g++-multilib netcdf-bin libnetcdf-dev \
-    gcc-multilib texlive-latex-base \
+    gcc-multilib texlive-latex-base vim nano \
     texlive-fonts-recommended netcdf-bin \
     libnetcdf-dev libtool-bin tmux xvfb htop rsync wget bzip2 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
