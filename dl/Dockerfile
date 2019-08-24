@@ -10,7 +10,7 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get autoremove && \
     apt-get install -y python3 python3-dev python3-pip \
-                        ffmpeg locales transmission-cli rtorrent
+                        ffmpeg locales rtorrent mc
 
 # Set the locale
 RUN locale-gen en_US.UTF-8  
