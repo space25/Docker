@@ -10,12 +10,12 @@ ENV PYTHONNOUSERSITE="True"
 ENV CONDA_ENV_PATH /root/miniconda3/bin
 ENV GPU_CONDA_ENV "gpu_env_py37"
 ENV CPU_CONDA_ENV "cpu_env_py37"
-ENV BETA1_CONDA_ENV "beta1_env_py37"
+ENV RC_CONDA_ENV "rc_env_py37"
 
 # This is how you will activate this conda environment
 ENV CONDA_ACTIVATE_GPU "source ${CONDA_ENV_PATH}/activate ${GPU_CONDA_ENV}"
 ENV CONDA_ACTIVATE_CPU "source ${CONDA_ENV_PATH}/activate ${CPU_CONDA_ENV}"
-ENV CONDA_ACTIVATE_BETA1 "source ${CONDA_ENV_PATH}/activate ${BETA1_CONDA_ENV}"
+ENV CONDA_ACTIVATE_RC "source ${CONDA_ENV_PATH}/activate ${RC_CONDA_ENV}"
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh && \
@@ -62,7 +62,7 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
     ${CONDA_ENV_PATH}/conda create -n $GPU_CONDA_ENV python=${PYTHON_VERSION} && \
     ${CONDA_ENV_PATH}/conda create -n $CPU_CONDA_ENV python=${PYTHON_VERSION} && \
-    ${CONDA_ENV_PATH}/conda create -n $BETA1_CONDA_ENV python=${PYTHON_VERSION}
+    ${CONDA_ENV_PATH}/conda create -n $RC_CONDA_ENV python=${PYTHON_VERSION}
 
 # Build OpenCV
 RUN mkdir /cv && cd /cv &&\
@@ -100,14 +100,14 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec && \
 # GPU nightly
-    $CONDA_ACTIVATE_BETA1 && conda info --envs && \
+    $CONDA_ACTIVATE_RC && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec && \
 # Install tensorflow pip package
     $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION} && \
     $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION} && \
-    $CONDA_ACTIVATE_BETA1 && pip --no-cache-dir install tensorflow-gpu==2.0.0-beta1
+    $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc0
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
