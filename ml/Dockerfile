@@ -106,8 +106,11 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     python -m ipykernel.kernelspec && \
 # Install tensorflow pip package
     $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION} && \
+    conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
     $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION} && \
-    $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc0
+    conda install pytorch torchvision cpuonly -c pytorch && \
+    $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc0 && \
+    conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
