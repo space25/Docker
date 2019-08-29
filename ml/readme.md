@@ -15,3 +15,7 @@
     ```
     nvidia-smi
     ```
+1. Check gpu utilization
+    ```
+    watch -n 0.1 nvidia-smi
+    ```
