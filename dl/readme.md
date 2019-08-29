@@ -1,11 +1,11 @@
 ## Prepare Docker image
 1. Build image:
     ```
-    docker build --network host -t dl .
+    docker build --network host -t spacev/dl .
     ```
 1. Run docker:
     ```
-    docker run -it -v ~/Downloads/dl:/data dl /bin/bash
+    docker run -it -v ~/Downloads/dl:/data spacev/dl /bin/bash
     ```
 ## Download from youtube
 1. Download playlist:
