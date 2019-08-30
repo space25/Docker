@@ -73,13 +73,21 @@
 
         docker system prune -a
 
-- Other:
+- Port mapping:
 
         docker run -d -p 5001:80
 
         docker run -it -p 8885:8888 <name>
 
-        docker run -it -v ~/Downloads:/data <name> /bin/bash
+- Volume mapping:
+
+        docker run -it -v ~/Downloads:/data ubuntu /bin/bash
+
+- Container logs in a detach mode:
+
+        docker logs <container_d>
+
+- Other:
 
     '-d' run in the background
 
@@ -88,7 +96,6 @@
     Path to docker containers /var/lib/docker/aufs/diff/. Docker files
 
         sudo ls -l /var/lib/docker/aufs/diff/
-
 
 ## Links
 
