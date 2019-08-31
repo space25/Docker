@@ -19,15 +19,15 @@
 
         docker run -it ubuntu bash
 
-- To see are running containers:
+- To check are running containers:
 
         docker ps
 
-- To see all containers:
+- Check containers:
 
         docker ps -a
 
-- To see all images:
+- Check images:
 
         docker images
 
