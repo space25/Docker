@@ -42,3 +42,4 @@ bezier
 imutils
 keras
 pydot
+spacy

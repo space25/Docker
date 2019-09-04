@@ -112,6 +112,11 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc0 && \
     conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 
+RUN wget https://github.com/explosion/spacy-models/releases/download/en_vectors_web_lg-2.1.0/en_vectors_web_lg-2.1.0.tar.gz -O en_vectors_web_lg-2.1.0.tar.gz && \
+    $CONDA_ACTIVATE_GPU && pip install en_vectors_web_lg-2.1.0.tar.gz && \
+    $CONDA_ACTIVATE_CPU && pip install en_vectors_web_lg-2.1.0.tar.gz && \
+    $CONDA_ACTIVATE_RC && pip install en_vectors_web_lg-2.1.0.tar.gz
+
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
-WORKDIR "/"
+WORKDIR /
