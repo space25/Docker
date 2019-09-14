@@ -43,3 +43,4 @@ imutils
 keras
 pydot
 spacy
+pypng
