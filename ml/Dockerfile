@@ -104,18 +104,16 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt && \
     python -m ipykernel.kernelspec && \
-# Install tensorflow pip package
+# Install ML package
     $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION} && \
     conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
+    python -m spacy download en && \
     $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION} && \
     conda install pytorch torchvision cpuonly -c pytorch && \
-    $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc0 && \
-    conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
-
-RUN wget https://github.com/explosion/spacy-models/releases/download/en_vectors_web_lg-2.1.0/en_vectors_web_lg-2.1.0.tar.gz -O en_vectors_web_lg-2.1.0.tar.gz && \
-    $CONDA_ACTIVATE_GPU && pip install en_vectors_web_lg-2.1.0.tar.gz && \
-    $CONDA_ACTIVATE_CPU && pip install en_vectors_web_lg-2.1.0.tar.gz && \
-    $CONDA_ACTIVATE_RC && pip install en_vectors_web_lg-2.1.0.tar.gz
+    python -m spacy download en && \
+    $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc1 && \
+    conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
+    python -m spacy download en 
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
