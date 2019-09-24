@@ -44,3 +44,4 @@ keras
 pydot
 spacy
 pypng
+nltk
