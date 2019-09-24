@@ -55,8 +55,7 @@ RUN apt-get install -y --no-install-recommends \
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     chmod +x Miniconda3-latest-Linux-x86_64.sh && \
     ./Miniconda3-latest-Linux-x86_64.sh -b && \
-    rm -f ./Miniconda3-latest-Linux-x86_64.sh && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    rm -f ./Miniconda3-latest-Linux-x86_64.sh
 
 # Create virtualenv
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
@@ -107,13 +106,13 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
 # Install ML package
     $CONDA_ACTIVATE_GPU && pip --no-cache-dir install tensorflow-gpu==${TENSORFLOW_VERSION} && \
     conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
-    python -m spacy download en && \
+    python -m spacy download en && python -m spacy download en_vectors_web_lg && \
     $CONDA_ACTIVATE_CPU && pip --no-cache-dir install tensorflow==${TENSORFLOW_VERSION} && \
     conda install pytorch torchvision cpuonly -c pytorch && \
-    python -m spacy download en && \
+    python -m spacy download en && python -m spacy download en_vectors_web_lg && \
     $CONDA_ACTIVATE_RC && pip --no-cache-dir install tensorflow-gpu==2.0.0-rc1 && \
     conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
-    python -m spacy download en 
+    python -m spacy download en && python -m spacy download en_vectors_web_lg
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
 
