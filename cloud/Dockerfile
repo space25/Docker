@@ -1,4 +1,4 @@
-FROM nextcloud:17.0.0RC1-apache
+FROM nextcloud:17.0.0RC2-apache
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh
