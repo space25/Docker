@@ -46,4 +46,4 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
 
 RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
     echo "alias i_notebook='jupyter notebook --allow-root --notebook-dir=$pwd'" >> $HOME/.bashrc && \
-    echo "PS1='\w >>> '" >> $HOME/.bashrc
+    echo "PS1='\$\w >>> '" >> $HOME/.bashrc
