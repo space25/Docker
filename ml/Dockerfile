@@ -114,6 +114,8 @@ RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
     conda install pytorch torchvision cudatoolkit=10.0 -c pytorch && \
     python -m spacy download en && python -m spacy download en_vectors_web_lg
 
-RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc
+RUN echo "$CONDA_ACTIVATE_GPU" >> $HOME/.bashrc && \
+    echo "alias i_notebook='jupyter notebook --allow-root --notebook-dir=$pwd'" >> $HOME/.bashrc && \
+    echo "PS1='\w >>> '" >> $HOME/.bashrc
 
 WORKDIR /
