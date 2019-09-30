@@ -9,7 +9,7 @@
 2. [Post-installation steps for Linux](https://docs.docker.com/install/linux/linux-postinstall/)
 3. Verify that Docker CE is installed correctly by running the Ubuntu image:
 
-        docker run docker/whalesay cowsay HI
+        docker run docker/whalesay cowsay "HI $(docker --version)"
 
 4. [Get started with Docker](https://docs.docker.com/get-started/)
 
