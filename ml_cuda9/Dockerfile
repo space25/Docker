@@ -33,9 +33,8 @@ RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
     ${CONDA_ENV_PATH}/conda create -n $GPU_CONDA_ENV python=${PYTHON_VERSION}
 
 RUN $CONDA_ACTIVATE_GPU && conda info --envs && \
-    pip install --upgrade pip 
-
-RUN $CONDA_ACTIVATE_GPU pip install matplotlib pandas scipy scikit-learn \
+    pip install --upgrade pip && \
+    pip install matplotlib pandas scipy scikit-learn \
     jupyter sklearn opencv-python pydot spacy pypng nltk pyyaml && \
     pip install tensorflow-gpu==1.12.0 && \
     conda install pytorch=0.4.1 cuda90 -c pytorch && \
