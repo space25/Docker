@@ -19,3 +19,5 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8  
 
 RUN pip3 --no-cache-dir install --upgrade youtube_dl coursera-dl
+
+WORKDIR /data
