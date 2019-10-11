@@ -5,7 +5,7 @@
     ```
 1. Run docker:
     ```
-    docker run -it -v ~/Downloads/dl:/data spacev/dl /bin/bash
+    docker run -it -u $(id -u):$(id -g) -v ~/Downloads/dl:/data spacev/dl /bin/bash
     ```
 ## Download from youtube
 1. Download playlist:
