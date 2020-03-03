@@ -3,13 +3,13 @@
 ## Install Docker:
 
 1. [Install Docker CE for Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-1. [Optional] Add GPU supprort:
-        * [Install CUDA Toolkit](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)
-        * [Install nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
-        * Check usage:
-                ```
-                sudo docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
-                ```
+1. [Optional] Add GPU support:
+    * [Install CUDA Toolkit](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)
+    * [Install nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
+    * Check usage:
+        ```
+        sudo docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
+        ```
 1. [Post-installation steps for Linux](https://docs.docker.com/install/linux/linux-postinstall/)
 1. Verify that Docker CE is installed correctly by running the Ubuntu image:
 
