@@ -3,13 +3,19 @@
 ## Install Docker:
 
 1. [Install Docker CE for Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-2. [Install nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
-2. [Post-installation steps for Linux](https://docs.docker.com/install/linux/linux-postinstall/)
-3. Verify that Docker CE is installed correctly by running the Ubuntu image:
+1. [Optional] Add GPU supprort:
+        * [Install CUDA Toolkit](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=debnetwork)
+        * [Install nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
+        * Check usage:
+                ```
+                sudo docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
+                ```
+1. [Post-installation steps for Linux](https://docs.docker.com/install/linux/linux-postinstall/)
+1. Verify that Docker CE is installed correctly by running the Ubuntu image:
 
         docker run docker/whalesay cowsay "HI $(docker --version)"
 
-4. [Get started with Docker](https://docs.docker.com/get-started/)
+1. [Get started with Docker](https://docs.docker.com/get-started/)
 
 ## Operation with docker
 
