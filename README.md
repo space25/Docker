@@ -2,10 +2,8 @@
 
 ## Install Docker:
 
-1. [Get Docker CE for Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) or
-
-        sudo snap install docker
-
+1. [Install Docker CE for Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+2. [Install nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
 2. [Post-installation steps for Linux](https://docs.docker.com/install/linux/linux-postinstall/)
 3. Verify that Docker CE is installed correctly by running the Ubuntu image:
 
