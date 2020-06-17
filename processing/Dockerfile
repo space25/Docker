@@ -6,7 +6,7 @@ ENV PYTHON_VERSION 3.7
 ENV PYTHONNOUSERSITE="True"
 ENV DEBIAN_FRONTEND noninteractive
 ENV CONDA_ENV_PATH /root/miniconda3/bin
-ENV CONDA_ENV "processing_${PYTHON_VERSION}"
+ENV CONDA_ENV "env_cpu_${PYTHON_VERSION}"
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh
@@ -25,19 +25,14 @@ ENV LC_ALL en_US.UTF-8
 ENV PYTHONIOENCODING=UTF-8
 
 # Install APT packages
-RUN apt-get install -y \
-    apt-utils pkg-config zip unzip git mc nano curl wget snapd\
+RUN apt-get update -y && apt-get install -y \
+    apt-utils pkg-config zip unzip git mc nano curl wget \
     x11vnc xvfb \
-    default-jre g++ gcc gfortran build-essential protobuf-compiler \
+    default-jre g++ gcc gfortran build-essential protobuf-compiler\
     clang clang-format automake make cmake ninja-build ccache \
-    python3-dev python3-pip python3-numpy g++-multilib gcc-multilib\
-    zlib1g-dev libboost-all-dev libjpeg-dev libtiff-dev libpng-dev libavcodec-dev \
-    # install Node.js 
-    # https://github.com/nodesource/distributions/blob/master/README.md
-    dirmngr apt-transport-https lsb-release ca-certificates && \
-    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get update -y && \
-    apt-get install -y nodejs && \
+    python3-dev python3-pip python3-numpy g++-multilib gcc-multilib \
+    zlib1g-dev libboost-all-dev libjpeg-dev libtiff-dev libpng-dev libavcodec-dev ffmpeg \
+    nodejs npm && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install miniconda3
@@ -61,8 +56,14 @@ RUN $CONDA_ACTIVATE && \
 
 # https://github.com/jupyterlab/debugger
 RUN $CONDA_ACTIVATE && \
-    conda install -c conda-forge xeus=0.23.14 xeus-python=0.7.1 notebook=6 jupyterlab=2 ptvsd && \
+    conda install -c conda-forge nodejs && \
+    conda install -c conda-forge xeus xeus-python notebook jupyterlab ptvsd && \
+    pip --no-cache-dir install nbconvert  && \
     jupyter labextension install @jupyterlab/debugger
+
+# # https://pypi.org/project/cvloop/
+# RUN $CONDA_ACTIVATE && \
+#     conda install -c conda-forge cvloop
 
 # https://github.com/krassowski/jupyterlab-lsp
 RUN $CONDA_ACTIVATE && \
@@ -70,12 +71,16 @@ RUN $CONDA_ACTIVATE && \
     jupyter labextension install @krassowski/jupyterlab-lsp && \
     conda install -c conda-forge python-language-server r-languageserver
 
-# https://github.com/jupyterlab/jupyterlab-git
+# https://github.com/maartenbreddels/ipywebrtc
 RUN $CONDA_ACTIVATE && \
-    pip install --no-cache-dir jupyterlab-git && \
-    jupyter labextension install @jupyterlab/git
+    conda install -c conda-forge ipywebrtc
 
-RUN echo "alias i_jupyter='jupyter lab --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \
+
+RUN $CONDA_ACTIVATE && \
+    jupyter lab build
+
+RUN echo "alias i_jupyter_lab='jupyter lab --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \
+    echo "alias i_jupyter_notebook='jupyter notebook --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \
     echo "PS1='\$\w >>> '" >> $HOME/.bashrc && \
     echo "$CONDA_ACTIVATE" >> $HOME/.bashrc
 
