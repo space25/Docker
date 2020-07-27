@@ -45,3 +45,4 @@ pydot
 spacy
 pypng
 nltk
+paramiko
