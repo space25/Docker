@@ -1,7 +1,12 @@
 FROM ubuntu
+# FROM tensorflow/tensorflow:2.3.0-gpu
+
+# Change sh to bash
+RUN ln -sf /bin/bash /bin/sh
 
 ENV L_DOCKER_BUILD_VERSION 1
 ENV PYTHON_VERSION 3.7
+ENV OPEN_CV_VERSION 4.4.0
 
 ENV PYTHONNOUSERSITE="True"
 ENV DEBIAN_FRONTEND noninteractive
@@ -18,20 +23,25 @@ RUN apt-get update -y && apt-get install -y locales && \
     apt-get clean && \
 # Set the locale
     locale-gen en_US.UTF-8
-    
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV PYTHONIOENCODING=UTF-8
 
 # Install APT packages
 RUN apt-get update -y && apt-get install -y \
+    htop openssh-server tmux vim neovim ca-certificates \
     apt-utils pkg-config zip unzip git mc nano curl wget \
     x11vnc xvfb \
     default-jre g++ gcc gfortran build-essential protobuf-compiler\
     clang clang-format automake make cmake ninja-build ccache \
     python3-dev python3-pip python3-numpy g++-multilib gcc-multilib \
     zlib1g-dev libboost-all-dev libjpeg-dev libtiff-dev libpng-dev libavcodec-dev ffmpeg \
+    libavformat-dev libswscale-dev libv4l-dev libtbb2 libtbb-dev libdc1394-22-dev \
+    libxvidcore-dev libx264-dev netcdf-bin\
+    libnetcdf-dev libtool-bin automake ccache\
+    qtcreator clang-format default-jdk \
     nodejs npm && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -45,39 +55,46 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
     ${CONDA_ENV_PATH}/conda create -n $CONDA_ENV python=${PYTHON_VERSION}
 
+# Build OpenCV
+RUN mkdir /cv && cd /cv &&\
+    git clone --depth 1 https://github.com/opencv/opencv_contrib.git -b ${OPEN_CV_VERSION} &&\
+    git clone --depth 1 https://github.com/opencv/opencv.git -b ${OPEN_CV_VERSION} &&\
+    cd opencv &&\
+    mkdir build &&\
+    cd build &&\
+    cmake -G "Ninja"\
+    -D CMAKE_BUILD_TYPE=RELEASE\
+    -D CMAKE_INSTALL_PREFIX=/usr/local\
+    -D INSTALL_C_EXAMPLES=OFF\
+    -D INSTALL_PYTHON_EXAMPLES=OFF\
+    -D OPENCV_EXTRA_MODULES_PATH=/cv/opencv_contrib/modules\
+    -D BUILD_opencv_legacy=OFF\
+    -D BUILD_EXAMPLES=OFF\
+    -D WITH_CUDA=OFF\
+    -D ENABLE_AVX=ON\
+    -D WITH_OPENGL=ON\
+    -D WITH_TIFF=ON\
+    -D BUILD_TIFF=ON .. &&\
+    ninja && ninja install && ldconfig && rm -rf /cv
+
 ADD requirements.txt /
 
 RUN $CONDA_ACTIVATE && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt  && \
     python -m ipykernel.kernelspec && \
-    pip --no-cache-dir install tensorflow-cpu && \
-    conda install pytorch torchvision cpuonly -c pytorch
+    conda install -y pylint autopep8 && \
+    conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch && \
+    pip --no-cache-dir install tensorflow-cpu
+    # pip --no-cache-dir install tensorflow
 
-# https://github.com/jupyterlab/debugger
-RUN $CONDA_ACTIVATE && \
-    conda install -c conda-forge nodejs && \
-    conda install -c conda-forge xeus xeus-python notebook jupyterlab ptvsd && \
-    pip --no-cache-dir install nbconvert  && \
-    jupyter labextension install @jupyterlab/debugger
+RUN git clone https://github.com/VundleVim/Vundle.vim.git /root/.vim/bundle/Vundle.vim
 
-# # https://pypi.org/project/cvloop/
-# RUN $CONDA_ACTIVATE && \
-#     conda install -c conda-forge cvloop
+ADD .vimrc /root/
 
-# https://github.com/krassowski/jupyterlab-lsp
-RUN $CONDA_ACTIVATE && \
-    pip install --no-cache-dir jupyter-lsp && \
-    jupyter labextension install @krassowski/jupyterlab-lsp && \
-    conda install -c conda-forge python-language-server r-languageserver
+RUN mkdir /root/PROJECTS
 
-# https://github.com/maartenbreddels/ipywebrtc
-RUN $CONDA_ACTIVATE && \
-    conda install -c conda-forge ipywebrtc
-
-
-RUN $CONDA_ACTIVATE && \
-    jupyter lab build
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 RUN echo "alias i_jupyter_lab='jupyter lab --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \
     echo "alias i_jupyter_notebook='jupyter notebook --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \

@@ -3,6 +3,8 @@ Pillow
 h5py
 hdf5storage
 ipykernel
+jupyter
+jupyterlab
 matplotlib
 numpy
 pandas
@@ -22,7 +24,6 @@ cairocffi
 pyqt5
 qimage2ndarray
 dotmap
-pandas
 json5
 pydotplus
 scikit_learn
@@ -45,4 +46,10 @@ pydot
 spacy
 pypng
 nltk
+ndjson
+PyOpenGL
+transforms3d
+pygame
+noise
+pyarrow
 paramiko
