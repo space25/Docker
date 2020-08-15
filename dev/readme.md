@@ -11,7 +11,7 @@
     ```
     echo 'root:<password!>' | chpasswd
     ```
-1. Run ssh server:
+1. Start ssh server:
     ```
     service ssh start
     ```
