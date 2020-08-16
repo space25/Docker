@@ -83,7 +83,7 @@ RUN $CONDA_ACTIVATE && \
     pip install --upgrade pip && \
     pip --no-cache-dir install -r /requirements.txt  && \
     python -m ipykernel.kernelspec && \
-    conda install -y pylint autopep8 && \
+    conda install -y pylint autopep8 rope && \
     conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch && \
     pip --no-cache-dir install tensorflow-cpu
     # pip --no-cache-dir install tensorflow
