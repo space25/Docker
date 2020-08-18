@@ -9,6 +9,7 @@
 
 ### Config system:
 1. Generating a new SSH key
+
     Linux
     ```
     ssh-keygen -t rsa -b 4096 -f ${HOME}/.ssh/linux_rsa
