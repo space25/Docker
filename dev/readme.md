@@ -9,8 +9,13 @@
 
 ### Config system:
 1. Generating a new SSH key
+    Linux
     ```
-    ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+    ssh-keygen -t rsa -b 4096 -f ${HOME}/.ssh/linux_rsa
+    ```
+    Windows 10:
+    ```
+    ssh-keygen -t rsa -b 4096 -f %USERPROFILE%/.ssh/linux_rsa
     ```
 1. Rename the public key to authorized_keys:
 1. Run docker image:
