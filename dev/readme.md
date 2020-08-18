@@ -7,7 +7,7 @@
     ```
 
 
-### Config system
+### Config system:
 1. Generating a new SSH key
     ```
     ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
@@ -27,7 +27,7 @@
     ```
 
 
-Links:
+## Links:
 1. [Visual Studio Code Remote Development through SSH](https://www.youtube.com/watch?v=lKXMyln_5q4)
 1. [Quickly get up and running with CMake in VS Code](https://www.youtube.com/watch?v=9thQdjvVD9k)
 1. [cv2 module members are not recognized](https://github.com/PyCQA/pylint/issues/2426)
