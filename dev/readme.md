@@ -1,3 +1,13 @@
+### Config Visual Studio Code:
+1. On VScode: CTRL + Shift + P
+1. Choose "Preferences: Open Settings (JSON)"
+1. Add this line into JSON file:
+    ```
+    "python.linting.pylintArgs": ["--generate-members"]
+    ```
+
+
+### Config system
 1. Generating a new SSH key
     ```
     ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
@@ -15,3 +25,10 @@
     ```
     service ssh start
     ```
+
+
+Links:
+1. [Visual Studio Code Remote Development through SSH](https://www.youtube.com/watch?v=lKXMyln_5q4)
+1. [Quickly get up and running with CMake in VS Code](https://www.youtube.com/watch?v=9thQdjvVD9k)
+1. [cv2 module members are not recognized](https://github.com/PyCQA/pylint/issues/2426)
+1. [Visual Studio Code - How to add multiple paths to python path?](https://stackoverflow.com/questions/41471578/visual-studio-code-how-to-add-multiple-paths-to-python-path)
