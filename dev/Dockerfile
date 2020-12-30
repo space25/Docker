@@ -1,12 +1,12 @@
 FROM ubuntu
-# FROM tensorflow/tensorflow:2.3.0-gpu
+# FROM tensorflow/tensorflow:2.4.0-gpu
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh
 
 ENV L_DOCKER_BUILD_VERSION 1
-ENV PYTHON_VERSION 3.7
-ENV OPEN_CV_VERSION 4.4.0
+ENV PYTHON_VERSION 3.8
+ENV OPEN_CV_VERSION 4.5.1
 
 ENV PYTHONNOUSERSITE="True"
 ENV DEBIAN_FRONTEND noninteractive
@@ -84,7 +84,7 @@ RUN $CONDA_ACTIVATE && \
     pip --no-cache-dir install -r /requirements.txt  && \
     python -m ipykernel.kernelspec && \
     conda install -y pylint autopep8 rope && \
-    conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch && \
+    conda install pytorch torchvision torchaudio cpuonly -c pytorch && \
     pip --no-cache-dir install tensorflow-cpu
     # pip --no-cache-dir install tensorflow
 
