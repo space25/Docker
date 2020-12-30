@@ -15,6 +15,7 @@ Plugin 'VundleVim/Vundle.vim'
 " plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plugin 'ycm-core/YouCompleteMe'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
