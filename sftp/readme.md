@@ -1,16 +1,18 @@
 ## Run sftp Docker image ([git](https://github.com/atmoz/sftp))
+### Read only
 ```
 docker run \
-    -v /host/upload:/home/foo/upload \
+    -v ${HOME}/upload:/home/storage/upload \
     -p 2222:22 -d atmoz/sftp \
-    foo:pass:1001
+    storage:pass:1001
 ```
-or
+
+### Read/Write
 ```
 docker run \
     -p 2222:22 \
     -d \
-    -v /host/upload:/home/foo/upload \
+    -v ${HOME}/upload:/home/storage/upload \
     atmoz/sftp \
-    foo:pass:::upload
+    storage:pass:::upload
 ```
