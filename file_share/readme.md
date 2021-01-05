@@ -16,3 +16,8 @@ docker run \
     atmoz/sftp \
     storage:pass:::upload
 ```
+
+### Or HTTP server
+```
+python -m SimpleHTTPServer 8000
+```
