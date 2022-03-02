@@ -24,20 +24,23 @@ ENV CONDA_ENV_PATH /home/user/miniconda3/bin
 
 # Install APT packages
 RUN apt-get update -y && \
-    apt-get -y install software-properties-common && \
-    add-apt-repository ppa:lyzardking/ubuntu-make && \
+    apt-get -y install software-properties-common wget && \
     add-apt-repository ppa:micahflee/ppa && \
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
     apt-get update -y && apt-get install -y \
-    xauth tar zip git ubuntu-make firefox torbrowser-launcher \
-    tmux curl wget mc vim rsync default-jdk \
+    xauth tar zip git firefox torbrowser-launcher \
+    tmux curl mc vim rsync default-jdk \
     g++ gcc gfortran build-essential clang clang-format automake make cmake ninja-build \
     python3 python3-dev python3-pip libjpeg-dev libpng-dev \
-    ca-certificates sudo fonts-liberation run-one && \
+    ca-certificates sudo fonts-liberation run-one code && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 RUN useradd -ms /bin/bash user
 USER user
 WORKDIR /home/user
+
 
 # Install miniconda3
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
@@ -50,11 +53,10 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 RUN ${CONDA_ENV_PATH}/conda update -n base conda && \
     ${CONDA_ENV_PATH}/conda create -n $CONDA_ENV python=${PYTHON_VERSION}
 
-RUN umake ide pycharm /home/user/pycharm
 
-RUN echo "alias pycharm='sh /home/user/pycharm/bin/pycharm.sh'" >> $HOME/.bashrc && \
-    echo "PS1='\$\w >>> '" >> $HOME/.bashrc && \
+RUN echo "PS1='\$\w >>> '" >> $HOME/.bashrc && \
     echo "$CONDA_ACTIVATE" >> $HOME/.bashrc
+
 
 EXPOSE 8887
 
