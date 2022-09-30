@@ -14,6 +14,12 @@
         sudo docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
         ```
 1. [Post-installation steps for Linux](https://docs.docker.com/install/linux/linux-postinstall/)
+   ```
+   sudo groupadd docker # Create the docker group.
+   ```
+   ```
+   sudo usermod -aG docker $USER # Add your user to the docker group.
+   ```
 1. Verify that Docker CE is installed correctly by running the Ubuntu image:
 
         docker run docker/whalesay cowsay "HI $(docker --version)"
