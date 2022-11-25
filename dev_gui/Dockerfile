@@ -7,8 +7,9 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONNOUSERSITE="True"
 ENV PYTHON_VERSION 3.10
 ENV OPENCV_VERSION 4.6.0
+ENV USER_NAME vm
 
-ENV CONDA_ENV_PATH /home/user/miniconda3/bin
+ENV CONDA_ENV_PATH /home/${USER_NAME}/miniconda3/bin
 
 # Change sh to bash
 RUN ln -sf /bin/bash /bin/sh
@@ -70,15 +71,16 @@ RUN mkdir opencv && cd opencv && \
 
 RUN sed -i 's/#*X11Forwarding.*/X11Forwarding yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#*X11UseLocalhost.*/X11UseLocalhost no/' /etc/ssh/sshd_config
+RUN service ssh start
 # RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN useradd -m user -p $(openssl passwd <set_password!!!>)
-USER user
+RUN useradd -m ${USER_NAME} -p $(openssl passwd <set_password!!!>)
+USER ${USER_NAME}
 EXPOSE 22
-WORKDIR /home/user
+WORKDIR /home/${USER_NAME}
 
-
+RUN cd /home/${USER_NAME} && mkdir TOOLS
 # Install miniconda3
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+RUN cd /home/${USER_NAME}/TOOLS && wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     chmod +x Miniconda3-latest-Linux-x86_64.sh && \
     ./Miniconda3-latest-Linux-x86_64.sh -b && \
     rm -f ./Miniconda3-latest-Linux-x86_64.sh
@@ -93,19 +95,28 @@ ENV CONDA_ACTIVATE "source ${CONDA_ENV_PATH}/activate ${CONDA_ENV}"
 
 RUN $CONDA_ACTIVATE && \
     pip install --upgrade pip && \
-    pip --no-cache-dir install scipy numpy matplotlib h5py tqdm paramiko opencv-python \
-    opencv-contrib-python open3d ipykernel xeus-robot xeus-python notebook jupyterlab && \
+    pip --no-cache-dir install scipy numpy matplotlib h5py \
+    tqdm paramiko \
+    opencv-python opencv-contrib-python \
+    open3d notebook jupyterlab && \
     conda install pytorch torchvision torchaudio cpuonly -c pytorch && \
     conda clean -ya
 
 
-ENV jetbrains_VERSION 2022.2.4
-RUN cd /home/user && wget https://download.jetbrains.com/cpp/CLion-${jetbrains_VERSION}.tar.gz && tar -zxf CLion-${jetbrains_VERSION}.tar.gz
-RUN cd /home/user && wget https://download.jetbrains.com/python/pycharm-community-${jetbrains_VERSION}.tar.gz && tar -zxf CLion-${jetbrains_VERSION}.tar.gz
+ENV JETBRAINS_VERSION 2022.2.4
+RUN cd /home/${USER_NAME}/TOOLS && \
+    wget https://download.jetbrains.com/cpp/CLion-${JETBRAINS_VERSION}.tar.gz && \
+    tar -zxf CLion-${JETBRAINS_VERSION}.tar.gz
+RUN cd /home/${USER_NAME}/TOOLS && \
+    wget https://download.jetbrains.com/python/pycharm-community-${JETBRAINS_VERSION}.tar.gz && \
+    tar -zxf pycharm-community-${JETBRAINS_VERSION}.tar.gz
 
 RUN echo "alias i_jupyter_lab='jupyter lab --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \
     echo "alias i_jupyter_notebook='jupyter notebook --allow-root --notebook-dir=$pwd --no-browser --ip=0.0.0.0'" >> $HOME/.bashrc && \
+    echo "alias pycharm='sh /home/"${USER_NAME}"/TOOLS/pycharm-community-"${JETBRAINS_VERSION}"/bin/pycharm.sh'" >> $HOME/.bashrc && \
+    echo "alias clion='sh /home/"${USER_NAME}"/TOOLS/clion-"${JETBRAINS_VERSION}"/bin/clion.sh'" >> $HOME/.bashrc && \
     echo "PS1='\$\w >>> '" >> $HOME/.bashrc && \
     echo "$CONDA_ACTIVATE" >> $HOME/.bashrc
 
+USER root
 CMD service ssh start ; bash
