@@ -96,7 +96,7 @@ ENV CONDA_ACTIVATE "source ${CONDA_ENV_PATH}/activate ${CONDA_ENV}"
 RUN $CONDA_ACTIVATE && \
     pip install --upgrade pip && \
     pip --no-cache-dir install scipy numpy matplotlib h5py \
-    tqdm paramiko \
+    tqdm paramiko tensorflow-cpu numba \
     opencv-python opencv-contrib-python \
     open3d notebook jupyterlab && \
     conda install pytorch torchvision torchaudio cpuonly -c pytorch && \
