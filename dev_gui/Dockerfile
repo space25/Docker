@@ -103,7 +103,7 @@ RUN $CONDA_ACTIVATE && \
     conda clean -ya
 
 
-ENV JETBRAINS_VERSION 2022.2.4
+ENV JETBRAINS_VERSION 2022.3.1
 RUN cd /home/${USER_NAME}/TOOLS && \
     wget https://download.jetbrains.com/cpp/CLion-${JETBRAINS_VERSION}.tar.gz && \
     tar -zxf CLion-${JETBRAINS_VERSION}.tar.gz
