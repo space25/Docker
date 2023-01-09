@@ -30,7 +30,7 @@ RUN apt-get update -y && \
     #Install libs
     apt-get install -y \
     procps file xauth tar zip meld openssh-server \
-    tmux wget mc vim rsync git meld \
+    tmux wget mc vim rsync git meld filezilla meld nautilus terminator \
     build-essential cmake make default-jdk clang clang-format automake ninja-build g++ gcc gfortran libboost-all-dev \
     swig libjsoncpp-dev libgtk2.0-dev pkg-config libjpeg-dev libtiff-dev libpng-dev libavcodec-dev \
     python3 python3-dev python3-pip python3-numpy \
