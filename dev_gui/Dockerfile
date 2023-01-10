@@ -100,6 +100,7 @@ RUN $CONDA_ACTIVATE && \
     opencv-python opencv-contrib-python \
     open3d notebook jupyterlab && \
     conda install pytorch torchvision torchaudio cpuonly -c pytorch && \
+    pip --no-cache-dir install kornia && \
     conda clean -ya
 
 
