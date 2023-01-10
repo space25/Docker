@@ -95,7 +95,7 @@ ENV CONDA_ACTIVATE "source ${CONDA_ENV_PATH}/activate ${CONDA_ENV}"
 
 RUN $CONDA_ACTIVATE && \
     pip install --upgrade pip && \
-    pip --no-cache-dir install scipy numpy matplotlib h5py \
+    pip --no-cache-dir install scipy numpy matplotlib h5py scikit-image \
     tqdm paramiko tensorflow-cpu numba \
     opencv-python opencv-contrib-python \
     open3d notebook jupyterlab && \
