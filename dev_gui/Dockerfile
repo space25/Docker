@@ -119,5 +119,7 @@ RUN echo "alias i_jupyter_lab='jupyter lab --allow-root --notebook-dir=$pwd --no
     echo "PS1='\$\w >>> '" >> $HOME/.bashrc && \
     echo "$CONDA_ACTIVATE" >> $HOME/.bashrc
 
+WORKDIR /PROJECTS
+
 USER root
 CMD service ssh start ; bash
