@@ -21,12 +21,7 @@ RUN apt-get update -y && \
     locales && \
     # Set the locale
     locale-gen en_US.UTF-8 && \
-    # Install Brave browser
-    apt-get install -y apt-transport-https curl && \
-    curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"| tee /etc/apt/sources.list.d/brave-browser-release.list && \
-    apt update -y && \
-    apt-get install -y brave-browser && \
+    apt-get install -y apt-transport-https curl &&
     #Install libs
     apt-get install -y \
     procps file xauth tar zip meld openssh-server \
