@@ -6,7 +6,7 @@ LABEL maintainer="Valera <https://github.com/space25/>"
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONNOUSERSITE="True"
 ENV PYTHON_VERSION 3.10
-ENV OPENCV_VERSION 4.6.0
+ENV OPENCV_VERSION 4.7.0
 ENV USER_NAME vm
 
 ENV CONDA_ENV_PATH /home/${USER_NAME}/miniconda3/bin
@@ -21,7 +21,12 @@ RUN apt-get update -y && \
     locales && \
     # Set the locale
     locale-gen en_US.UTF-8 && \
-    apt-get install -y apt-transport-https curl &&
+    # Install Brave browser
+    apt-get install -y apt-transport-https curl && \
+    curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"| tee /etc/apt/sources.list.d/brave-browser-release.list && \
+    apt update -y && \
+    apt-get install -y brave-browser && \
     #Install libs
     apt-get install -y \
     procps file xauth tar zip meld openssh-server \
