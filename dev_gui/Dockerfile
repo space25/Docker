@@ -34,6 +34,7 @@ RUN apt-get update -y && \
     build-essential cmake make default-jdk clang clang-format automake ninja-build g++ gcc gfortran libboost-all-dev \
     swig libjsoncpp-dev libgtk2.0-dev pkg-config libjpeg-dev libtiff-dev libpng-dev libavcodec-dev \
     python3 python3-dev python3-pip python3-numpy \
+    gdbserver \
     ca-certificates sudo fonts-liberation && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
