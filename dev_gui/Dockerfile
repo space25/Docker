@@ -28,7 +28,7 @@ RUN apt-get update -y && \
     apt update -y && \
     apt-get install -y brave-browser && \
     # install X2GO
-    add-apt-repository ppa:x2go/stable && apt-get update -y && apt-get install x2goserver x2goserver-xsession && \
+    add-apt-repository ppa:x2go/stable && apt-get update -y && apt-get install -y x2goserver x2goserver-xsession && \
     #Install libs
     apt-get install -y \
     procps file xauth tar zip meld openssh-server \
