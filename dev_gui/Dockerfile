@@ -22,11 +22,13 @@ RUN apt-get update -y && \
     # Set the locale
     locale-gen en_US.UTF-8 && \
     # Install Brave browser
-    apt-get install -y apt-transport-https curl && \
+    apt-get install -y apt-transport-https curl software-properties-common && \
     curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main"| tee /etc/apt/sources.list.d/brave-browser-release.list && \
     apt update -y && \
     apt-get install -y brave-browser && \
+    # install X2GO
+    add-apt-repository ppa:x2go/stable && apt-get update -y && apt-get install x2goserver x2goserver-xsession && \
     #Install libs
     apt-get install -y \
     procps file xauth tar zip meld openssh-server \
@@ -34,9 +36,9 @@ RUN apt-get update -y && \
     build-essential cmake make default-jdk clang clang-format automake ninja-build g++ gcc gfortran libboost-all-dev \
     swig libjsoncpp-dev libgtk2.0-dev pkg-config libjpeg-dev libtiff-dev libpng-dev libavcodec-dev \
     python3 python3-dev python3-pip python3-numpy \
-    gdbserver \
     ca-certificates sudo fonts-liberation && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
