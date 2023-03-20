@@ -73,6 +73,7 @@ RUN mkdir opencv && cd opencv && \
 RUN sed -i 's/#*X11Forwarding.*/X11Forwarding yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#*X11UseLocalhost.*/X11UseLocalhost no/' /etc/ssh/sshd_config
 # RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+# RUN echo "root:<set_password!!!>" | chpasswd
 
 RUN useradd -m ${USER_NAME} -p $(openssl passwd <set_password!!!>)
 USER ${USER_NAME}
