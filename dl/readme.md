@@ -10,15 +10,15 @@
 ## Download from youtube
 1. Download playlist:
     ```
-    youtube-dl --yes-playlist <url>
+    yt-dlp --yes-playlist <url>
     ```
     or with autonumber:
     ```
-    youtube-dl -cio '%(autonumber)s-%(title)s.%(ext)s' <url>
+    yt-dlp -cio '%(autonumber)s-%(title)s.%(ext)s' <url>
     ```
 1. Download mp3:
     ```
-    youtube-dl --extract-audio --audio-format mp3 <url>
+    yt-dlp --extract-audio --audio-format mp3 <url>
     ```
 ## Download from Coursera
 1. coursera-dl -u <user> -p <pass> modelthinking-004
