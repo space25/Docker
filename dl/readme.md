@@ -27,3 +27,7 @@
 ```
 sudo chmod -R 777 .
 ```
+
+## Links:
+1. [rTorrent, download Torrents from the command line](https://ubunlog.com/en/rtorrent-download-torrents-terminal/)
+2. [rTorrent](https://help.ubuntu.ru/wiki/rtorrent)
