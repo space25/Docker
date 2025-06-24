@@ -137,3 +137,4 @@
 
 1. [15 Docker Commands Beginners Should Know](https://dev.to/kojikanao/15-docker-commands-for-beginners-4m4d)
 2. [Docker Tutorial for Beginners - A Full DevOps Course on How to Run Applications in Containers](https://www.youtube.com/watch?v=fqMOX6JJhGo)
+3. [Running and Building ARM Docker](https://www.stereolabs.com/docs/docker/building-arm-container-on-x86/)
