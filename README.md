@@ -110,6 +110,29 @@
 
         sudo ls -l /var/lib/docker/aufs/diff/
 
+## [Optional] Add support aarch64
+- Install QEMU:
+    ```commandline
+    sudo apt update -y && sudo apt upgrade -y && sudo apt install -y qemu-kvm bridge-utils libvirt-daemon virt-manager \
+    libvirt-clients libvirt-daemon-system qemu binfmt-support qemu-user-static
+    ```
+    ```commandline
+    sudo adduser $USER libvirt
+    ```
+- Enable support for aarch64 containers on your x86 workstation (This step will execute the registering scripts):
+    ```commandline
+    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    ```
+- Testing the emulation environment:
+    ```commandline
+    docker run --rm -t arm64v8/ubuntu uname -m # Testing the emulation environment
+    ```
+    #aarch64
+- Run ubuntu 24.04 aarch64 dicker:
+    ```commandline
+    docker run -it -p 1022:22 --platform linux/arm64/v8 ubuntu:24.04 bash
+    ```
+
 ## Links
 
 1. [15 Docker Commands Beginners Should Know](https://dev.to/kojikanao/15-docker-commands-for-beginners-4m4d)
