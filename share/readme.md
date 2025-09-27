@@ -5,10 +5,9 @@
     ```
 1. Run docker:
     ```
-    docker run -it -u $(id -u):$(id -g) -p 22:22 -v ~/Documents:/data  share /bin/bash
+    docker run -it -p 22:22 -v ~/Documents:/data  share /bin/bash
     ```
 1. Start ssh server:
     ```
     echo 'root:<password!>' | chpasswd && service ssh start
     ```
-    
